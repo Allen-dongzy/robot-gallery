@@ -4,12 +4,12 @@ import Robot from './components/Robot'
 import ShoppingCart from './components/shoppingCart'
 import logo from './assets/images/logo.svg'
 
-const App = () => {
+const App: React.FC = () => {
 
   const [count, setCount] = useState<number>(0)
   const [robotGallery, setRobotGallery] = useState<any>([])
   const [loading, setLoading] = useState<any>(Boolean)
-  const [error, setError] = useState<string>('')
+  const [error, setError] = useState<string>()
 
   useEffect(() => {
     document.title = `点击${count}次`
@@ -36,6 +36,7 @@ const App = () => {
         <img src={logo} className={styles.appLogo} alt="logo" />
         <h1>罗伯特机器人炫酷吊炸天onli ne购物平台的名字要长</h1>
       </div>
+      {/* <h2>{props.username}</h2> */}
       <button onClick={() => {
         setCount(count + 1)
       }}>Click</button>
