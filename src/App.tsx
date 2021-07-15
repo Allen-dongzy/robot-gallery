@@ -1,54 +1,58 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import styles from './App.module.css'
 import Robot from './components/Robot'
 import ShoppingCart from './components/shoppingCart'
 import logo from './assets/images/logo.svg'
 
-interface Props { }
+const App = () => {
 
-interface State {
-  robotGallery: any[],
-  count: number
-}
+  const [count, setCount] = useState<number>(0)
+  const [robotGallery, setRobotGallery] = useState<any>([])
+  const [loading, setLoading] = useState<any>(Boolean)
+  const [error, setError] = useState<string>('')
 
-class App extends React.Component<Props, State> {
-  constructor(props) {
-    super(props)
-    this.state = {
-      robotGallery: [],
-      count: 0
+  useEffect(() => {
+    document.title = `点击${count}次`
+  }, [count])
+
+  useEffect(() => {
+    const fetchData = async () => {
+      setLoading(true)
+      try {
+        const res = await fetch('http://jsonplaceholder.typicode.com/users')
+        const data = await res.json()
+        setRobotGallery(data)
+      } catch (e) {
+        setError(e.message)
+      }
+      setLoading(false)
     }
-  }
+    fetchData()
+  }, [])
 
-  componentDidMount() {
-    fetch('http://jsonplaceholder.typicode.com/users')
-      .then(res => {
-        return res.json()
-      })
-      .then(res => {  
-        this.setState({ robotGallery: res })
-      })
-  }
-
-  render() {
-    return (
-      <div className={styles.app}>
-        <div className={styles.appHeader}>
-          <img src={logo} className={styles.appLogo} alt="logo" />
-          <h1>罗伯特机器人炫酷吊炸天online购物平台的名字要长</h1>
-        </div>
-        <button onClick={() => {
-          this.setState({ count: this.state.count + 1 })
-          console.log('count ', this.state.count)
-        }}>Click</button>
-        <span>count: {this.state.count}</span>
-        <ShoppingCart />
-        <div className={styles.robotList}>
-          {this.state.robotGallery.map(item => <Robot id={item.id} email={item.email} name={item.name} />)}
-        </div>
+  return (
+    <div className={styles.app}>
+      <div className={styles.appHeader}>
+        <img src={logo} className={styles.appLogo} alt="logo" />
+        <h1>罗伯特机器人炫酷吊炸天onli ne购物平台的名字要长</h1>
       </div>
-    )
-  }
+      <button onClick={() => {
+        setCount(count + 1)
+      }}>Click</button>
+      <span>count: {count}</span>
+      <ShoppingCart />
+      {error && <div>网站出错：{error}</div>}
+      {!loading ?
+        (
+          <div className={styles.robotList}>
+            {robotGallery.map(item => <Robot id={item.id} email={item.email} name={item.name} />)}
+          </div>
+        ) : (
+          <h2>loading 加载中</h2>
+        )
+      }
+    </div >
+  )
 }
 
 export default App
