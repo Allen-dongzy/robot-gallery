@@ -6,18 +6,21 @@ interface AppStateValue {
 }
 
 const defaultContextValue: AppStateValue = {
-  username: 'dzy1254',
+  username: 'dzy',
   shoppingCart: { items: [] }
 }
 
 export const appContext = React.createContext(defaultContextValue)
+export const appSetStateContext = React.createContext<React.Dispatch<React.SetStateAction<AppStateValue>> | undefined>(undefined)
 
 export const AppStateProvider: React.FC = (props) => {
-  const [state] = useState(defaultContextValue)
+  const [state, setState] = useState(defaultContextValue)
 
   return (
     <appContext.Provider value={state}>
-      {props.children}
+      <appSetStateContext.Provider value={setState}>
+        {props.children}
+      </appSetStateContext.Provider>
     </appContext.Provider>
   )
 }
