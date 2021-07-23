@@ -36,8 +36,9 @@ class ShoppingCart extends React.Component<Props, State> {
               </button>
               <div className={styles.cartDropDown} style={{ display: this.state.isOpen ? 'block' : 'none' }}>
                 <ul>
-                  <li>robot1</li>
-                  <li>robot2</li>
+                  {value.shoppingCart.items.map(item => (
+                    <li>{item.name}</li>
+                  ))}
                 </ul>
               </div>
             </div>
